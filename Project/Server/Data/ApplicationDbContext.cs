@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Project.Server.Configurations.Entities;
 using Project.Server.Models;
 using Project.Shared.Domain;
 using System;
@@ -25,5 +26,10 @@ namespace Project.Server.Data
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Staff> Staffs { get; set; }
 
-    }
+        //protected override void OnModelCreating(ModelBuilder builder)
+      //  {
+      //      base.OnModelCreating(builder);
+      //      builder.ApplyConfiguration(new StaffSeedConfiguration());
+      //  }
+        }
 }

@@ -1,0 +1,72 @@
+﻿@page "/department/"
+@inject HttpClient _client
+@inject IJSRuntime js
+@attribute [Authorize]
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3 class="card-title">Department</h3>
+<br />
+<a href="/department/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Add New Department
+</a>
+<br />
+<br />
+
+@if (Departments == null)
+{
+    <div class="alert alert-info">Loading Departments...</div>
+}
+else
+{
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Department in Departments)
+            {
+                <tr>
+                    <td>@Department.Name</td>
+                    <td>
+                        <a href="/makes/view/@Department.Name" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/makes/edit/@Department.Name" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(Department.Name))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private List<Department> Departments;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Departments = await _client.GetFromJsonAsync<List<Department>>($"{Endpoints.DepartmentEndpoint}");
+    }
+
+    async Task Delete(String DepartmentName)
+    {
+        var department = Departments.First(q => q.Name == DepartmentName);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {department.Name}?");
+        if (confirm)
+
+        {
+            await _client.DeleteAsync($"{Endpoints.DepartmentEndpoint}/{DepartmentName}");
+            await OnInitializedAsync();
+        }
+    }
+}

@@ -13,6 +13,7 @@ namespace Project.Shared.Domain
         public string Gender { get; set; }
         public string Address { get; set; }
         public float Weight { get; set; }
+        public int DepartmentId { get; set; }
     }
 
 }
